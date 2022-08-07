@@ -1,0 +1,34 @@
+Database:
+  #login de la base de donnees
+  name: 'Proxy'
+  host: '127.0.0.1'
+  port: '3306'
+  user: 'Plugins'
+  password: ''
+  useSSL : false
+
+SplitHomes:
+  - "event"
+  - "quest"
+
+Spawn:
+
+System:
+  LuckPerms:
+    TrackLp: "joueurs"
+    TrackVIP: "vip"
+
+Homes:
+  Price: 125000
+  Max: 54
+
+Rank:
+  default: 1
+  paysan: 2
+  terrien: 3
+  marchand: 4
+  citoyen: 5
+  commercant: 6
+  citadin: 7
+  mecene: 8
+

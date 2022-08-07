@@ -1,0 +1,47 @@
+Error:
+  NoConsole: "&cCet commande n'est pas disponible depuis la console."
+  NoPerm: "&cVous n'avez pas la permission de faire cette commande."
+  PlayerNotFound: "&cLe joueur &6{player} &cest introuvable"
+  WhatReload : "&eVous devez préciser quoi reload : config, language, cache, all"
+  CoordsInvalid : "&eLes Coordonnées sont invalide."
+  PlayerOffline : "&eLe Joueur &6{player} &eest Hors ligne."
+  FailTp : "&cEchec de la télèportation"
+  FailRank : "&cVous n'avez pas le grade neccesaire pour accéder à ce serveur"
+
+Spawn:
+  NotDefine : "&cAucun Spawn n'a été defini"
+  Teleport :  "&eTéléportation au Spawn"
+
+Homes:
+  Teleport: "&eVous avez été téléporté au home &6{home}"
+  Delete: "&eLe home &6{home} &ea été supprimé"
+  DeleteOther: "&eLe home &6{home} &e de &6{player} &ea été supprimé"
+  NoHome: "&cAucun home ne correspond au home : &6{home}"
+  NoHomes: "&cLe joueur &6{player} &cne posséde aucun homes"
+  SenderNoHomes: "&cVous ne possédez aucun homes"
+  NoHomeFound: "&cLe home &6{home}&c n'existe pas"
+  Create: "&eHome &6{home} &ecrée"
+  Update: "&eHome &6{home} &emodifié"
+  Limits: "&cVous avez atteint la limite de vos homes"
+  EditMaterial: "&eIcone du home &6{home} &emodifié"
+  BuySuccess: "&aVous venez d'acheter &6{num} &aHomes pour &6{price} &aHc."
+  BuyFail: "&cVous ne pouvez plus acheter de home, vous avez atteint le maximun."
+  BuyFailRequired : "&cVous n'avez pas le grade requis pour acheter des homes./nVous êtes &6{rank}&c, cela nécessite le grade &6{required}&c."
+  BuyTooMuch: "&eVous ne pouvez pas acheter &6{num} &eHomes, vous êtes à &6{left} &edu Maximun."
+
+Warps:
+  Delete: "&eLe warp &6{warp} &ea été supprimé"
+  NoWarpFound: "&cLe warp &6{warp}&c n'existe pas"
+  NoWarpsFound: "&cIl n''existe aucun warp."
+  Create: "&eWarp &6{warp} &ecrée"
+  Update: "&eWarp &6{warp} &emodifié"
+  EditMaterial: "&eIcone du warp &6{warp} &emodifié"
+  NoPermWarp: "&eLe warp &6{warp} &eest visible de tous"
+  PermWarp: "&eLe warp &6{warp} &enecessite une permission pour etre vu"
+
+Tp:
+  ToPlayer: "&eVous avez étè télèporté à : &6{player}"
+  ToCoords: "&eVous avez étè télèporté en &6{x} {y} {z}"
+  ToCoordsOther: "&eLe joueur &6{player} &ea étè télèporté en &6{x} {y} {z}"
+  TpaDemand: "&eDemande de téléportation envoyer"
+  WarningTpPVP: "&cAttention votre destination ce trouve en zone &6PVP"

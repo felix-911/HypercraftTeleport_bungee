@@ -1,0 +1,12 @@
+name: "HypercraftTeleport"
+author: "felix911"
+version: "Snapshot-0.1"
+api-version: "1.16"
+
+depend: [LuckPerms, ApiProxy]
+
+main: fr.felix911.hypercraftteleport.HypercraftTeleport
+
+
+
+
