@@ -2,7 +2,7 @@ package fr.felix911.hypercraftteleport.objects;
 
 import fr.felix911.hypercraftteleport.HypercraftTeleport;
 
-public class LocationObject {
+public class SpawnObject {
     private HypercraftTeleport pl;
     private String server;
     private String world;
@@ -11,10 +11,10 @@ public class LocationObject {
     private double z;
     private float pitch;
     private float yaw;
-    public LocationObject(HypercraftTeleport hypercraftTeleport) {this.pl = hypercraftTeleport;
+    public SpawnObject(HypercraftTeleport hypercraftTeleport) {this.pl = hypercraftTeleport;
     }
 
-    public LocationObject(String server, String world, double x, double y, double z, float pitch, float yaw){
+    public SpawnObject(String server, String world, double x, double y, double z, float pitch, float yaw){
 
         this.server = server;
         this.world = world;

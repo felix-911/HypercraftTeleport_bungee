@@ -74,8 +74,6 @@ public class HomeQueries implements IDatabaseTable {
                 statement.setDouble(5, home.getZ());
                 statement.setFloat(6, home.getPitch());
                 statement.setFloat(7, home.getYaw());
-
-
                 statement.setString(8, String.valueOf(playerUUID));
                 statement.setString(9, home.getName());
                 statement.executeUpdate();

@@ -1,6 +1,5 @@
 package fr.felix911.hypercraftteleport;
 
-
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.felix911.apiproxy.ApiProxy;
@@ -21,7 +20,7 @@ import fr.felix911.hypercraftteleport.manager.*;
 import fr.felix911.hypercraftteleport.manager.cache.HomesCache;
 import fr.felix911.hypercraftteleport.manager.cache.WarpCache;
 import fr.felix911.hypercraftteleport.objects.HomeObject;
-import fr.felix911.hypercraftteleport.objects.LocationObject;
+import fr.felix911.hypercraftteleport.objects.SpawnObject;
 import fr.felix911.hypercraftteleport.objects.WarpObject;
 import fr.felix911.hypercraftteleport.queries.HomeQueries;
 import fr.felix911.hypercraftteleport.queries.LocationQueries;
@@ -33,12 +32,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.json.simple.JSONObject;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -52,7 +49,7 @@ public class HypercraftTeleport extends Plugin {
 
     private HomeObject homeObject;
     private WarpObject warpObject;
-    private LocationObject locationObject;
+    private SpawnObject locationObject;
 
     private HomeQueries homeQueries;
     private WarpQueries warpQueries;
@@ -64,8 +61,6 @@ public class HypercraftTeleport extends Plugin {
     private CreateHome createHome;
     private CreateWarp createWarp;
     private SpawnManager spawnManager;
-
-    private LocationObject spawn;
 
     @Override
     public void onEnable() {
@@ -105,13 +100,13 @@ public class HypercraftTeleport extends Plugin {
 
         homeObject = new HomeObject(this);
         warpObject = new WarpObject(this);
-        locationObject = new LocationObject(this);
+        locationObject = new SpawnObject(this);
 
         createHome = new CreateHome(this);
         createWarp = new CreateWarp(this);
 
         spawnManager = new SpawnManager(this);
-        spawnManager.loadSpawn();
+
         buyHomesManager = new BuyHomesManager(this);
 
         this.getProxy().getPluginManager().registerListener(this, new JoinListener(this));
@@ -272,6 +267,35 @@ public class HypercraftTeleport extends Plugin {
         }
     }
 
+    public static JSONObject serializeAllWarpToJson(ProxiedPlayer sender, List<WarpObject> warpList, boolean edit) {
+        JSONObject json = new JSONObject();
+
+
+        json.put("RequestedPlayerUUID", sender.getUniqueId().toString());
+        json.put("Editor", String.valueOf(edit));
+
+        JSONObject jsonWarpList = new JSONObject();
+        for (WarpObject warp : warpList){
+            JSONObject jsonWarp = new JSONObject();
+
+            jsonWarp.put("Server", warp.getServer());
+            jsonWarp.put("World", warp.getWorld());
+            jsonWarp.put("X", warp.getX());
+            jsonWarp.put("Y", warp.getY());
+            jsonWarp.put("Z", warp.getZ());
+            jsonWarp.put("Pitch", warp.getPitch());
+            jsonWarp.put("Yaw", warp.getY());
+            jsonWarp.put("Block", warp.getBlock());
+            jsonWarp.put("CustomModelData", warp.getCustomModelData());
+            jsonWarp.put("NeedPerm", warp.isNeedPerm());
+
+            jsonWarpList.put(warp.getName(), jsonWarp);
+        }
+
+        json.put("WarpList", jsonWarpList);
+
+        return json;
+    }
 
     //getter
 
@@ -304,14 +328,6 @@ public class HypercraftTeleport extends Plugin {
     }
 
     //Spawn
-
-    public LocationObject getSpawn() {
-        return spawn;
-    }
-
-    public void setSpawn(LocationObject spawn) {
-        this.spawn = spawn;
-    }
 
     //Queries
 
@@ -346,7 +362,4 @@ public class HypercraftTeleport extends Plugin {
         return warpObject;
     }
 
-    public LocationObject getLocationObject() {
-        return locationObject;
-    }
 }

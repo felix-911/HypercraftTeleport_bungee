@@ -12,6 +12,7 @@ SplitHomes:
   - "quest"
 
 Spawn:
+  Default: spawn
 
 System:
   LuckPerms:

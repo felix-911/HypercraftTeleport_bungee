@@ -19,6 +19,7 @@ public class LangConfig {
 
     private String notDefine;
     private String teleport;
+    private String noDefaultSpawn;
 
     //homes
 
@@ -73,8 +74,9 @@ public class LangConfig {
 
         //Spawn
 
-        notDefine = language.getString("Spawn.NotDefien").replace("&", "§");
+        notDefine = language.getString("Spawn.NotDefine").replace("&", "§");
         teleport = language.getString("Spawn.Teleport").replace("&", "§");
+        noDefaultSpawn = language.getString("Spawn.NoDefaultSpawn").replace("&", "§");
 
         //homes
 
@@ -96,14 +98,14 @@ public class LangConfig {
 
         //warp
 
-        warpDelete = language.getString("Homes.Delete").replace("&", "§");
-        warpNoWarpFound = language.getString("Homes.NoWarpFound").replace("&", "§");
-        warpNoWarpsFound = language.getString("Homes.NoWarpsFound").replace("&", "§");
-        warpCreate = language.getString("Homes.Create").replace("&", "§");
-        warpUpdate = language.getString("Homes.Update").replace("&", "§");
-        warpEditMaterial = language.getString("Homes.EditMaterial").replace("&", "§");
-        warpNoPermWarp = language.getString("Homes.NoPermWarp").replace("&", "§");
-        warpPermWarp = language.getString("Homes.PermWarp").replace("&", "§");
+        warpDelete = language.getString("Warps.Delete").replace("&", "§");
+        warpNoWarpFound = language.getString("Warps.NoWarpFound").replace("&", "§");
+        warpNoWarpsFound = language.getString("Warps.NoWarpsFound").replace("&", "§");
+        warpCreate = language.getString("Warps.Create").replace("&", "§");
+        warpUpdate = language.getString("Warps.Update").replace("&", "§");
+        warpEditMaterial = language.getString("Warps.EditMaterial").replace("&", "§");
+        warpNoPermWarp = language.getString("Warps.NoPermWarp").replace("&", "§");
+        warpPermWarp = language.getString("Warps.PermWarp").replace("&", "§");
 
         //tp
 
@@ -160,6 +162,9 @@ public class LangConfig {
         return teleport;
     }
 
+    public String getNoDefaultSpawn() {
+        return noDefaultSpawn;
+    }
 
     //homes
 

@@ -11,6 +11,7 @@ Error:
 Spawn:
   NotDefine : "&cAucun Spawn n'a été defini"
   Teleport :  "&eTéléportation au Spawn"
+  NoDefaultSpawn : "&cAucun Spawn pas default n'es defini"
 
 Homes:
   Teleport: "&eVous avez été téléporté au home &6{home}"

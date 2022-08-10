@@ -28,7 +28,7 @@ public class Homes extends BaseCommand {
 
     @Default
     @CommandPermission("hypercraftteleport.command.homes")
-    @CommandCompletion("@players @nothing")
+    @CommandCompletion("@nothing @nothing")
     public void homes(CommandSender commandSender) {
         pl.getProxy().getScheduler().runAsync(pl, () -> {
             BaseComponent b;
@@ -36,7 +36,7 @@ public class Homes extends BaseCommand {
             if (commandSender instanceof ProxiedPlayer) {
 
                 ProxiedPlayer sender = (ProxiedPlayer) commandSender;
-                listHomes(sender, null, "self");
+                listHomes(sender, sender.getName(), "self");
 
             } else {
                 b = new TextComponent(pl.getConfigurationManager().getLang().getNoConsole());
@@ -45,7 +45,7 @@ public class Homes extends BaseCommand {
         });
     }
 
-    @CommandPermission("hypercraftteleport.command.home.homes.other")
+    @CommandPermission("hypercraftteleport.command.homes.other")
     @CommandCompletion("@players @nothing")
     public void homes(CommandSender commandSender, String player) {
         pl.getProxy().getScheduler().runAsync(pl, () -> {

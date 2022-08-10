@@ -2,7 +2,7 @@ package fr.felix911.hypercraftteleport.commands.warp;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import co.aikar.commands.annotation.Optional;
+import org.json.simple.JSONObject;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import fr.felix911.apiproxy.ApiProxy;
@@ -42,23 +42,17 @@ public class Warp extends BaseCommand {
                         b = new TextComponent(out);
                         sender.sendMessage(b);
                     } else {
-                        List<String> export = new ArrayList<>();
+                        List<WarpObject> export = new ArrayList<>();
 
                         for (String warpName : cache.keySet()){
-
                             WarpObject warpObject = cache.get(warpName);
-
                             if (sender.hasPermission("hypercraftteleport.command.warp.showall")){
-                                String s = warpName + "¤" + warpObject.getBlock() + "¤" + warpObject.getCustomModelData();
-                                export.add(s);
+                                export.add(warpObject);
                             } else if (warpObject.isNeedPerm() && sender.hasPermission("hypercraftteleport.command.warp." + warpName)){
-                                String s = warpName + "¤" + warpObject.getBlock() + "¤" + warpObject.getCustomModelData();
-                                export.add(s);
+                                export.add(warpObject);
                             } else if (!warpObject.isNeedPerm()){
-                                String s = warpName + "¤" + warpObject.getBlock() + "¤" + warpObject.getCustomModelData();
-                                export.add(s);
+                                export.add(warpObject);
                             }
-
                         }
                         boolean edit = false;
                         if (sender.hasPermission("hypercraftteleport.command.warp.config")){
@@ -69,8 +63,9 @@ public class Warp extends BaseCommand {
                             b = new TextComponent(out);
                             sender.sendMessage(b);
                         } else {
-                            export.sort(Comparator.naturalOrder());
-                            sendWarp(sender,export,edit);
+
+                            JSONObject json = pl.serializeAllWarpToJson(sender, export, edit);
+                            sendWarp(sender,json);
                         }
 
                     }
@@ -117,16 +112,14 @@ public class Warp extends BaseCommand {
         });
     }
 
-    private void sendWarp(ProxiedPlayer sender, List<String> export, boolean edit){
+    private void sendWarp(ProxiedPlayer sender, JSONObject json){
 
         ServerInfo server = sender.getServer().getInfo();
         try {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
             out.writeUTF("warpListGui");
-            out.writeUTF(String.valueOf(sender.getUniqueId()));
-            out.writeUTF(String.valueOf(export));
-            out.writeBoolean(edit);
+            out.writeUTF(json.toJSONString());
 
             server.sendData("hypercraft:teleport", out.toByteArray());
         } catch (Exception e) {

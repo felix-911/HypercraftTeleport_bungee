@@ -1,6 +1,7 @@
 package fr.felix911.hypercraftteleport.configuration;
 
-import fr.felix911.hypercraftteleport.objects.LocationObject;
+import com.google.gson.internal.LinkedHashTreeMap;
+import fr.felix911.hypercraftteleport.objects.SpawnObject;
 import net.md_5.bungee.config.Configuration;
 
 import java.util.HashMap;
@@ -27,6 +28,8 @@ public class ConfigConfig {
     private String requiredRank;
     private int priceHomes;
     int maxHomes;
+    private String defaultSpawn;
+    private Map<String, SpawnObject> spawnMap = new HashMap<>();
 
     public void load(Configuration config) {
         databaseName = config.getString("Database.name").replace("&", "§");
@@ -43,7 +46,6 @@ public class ConfigConfig {
         lPVIP = config.getString("System.LuckPerms.TrackVIP").replace("&", "§");
 
         for (String rank : config.getSection("Rank").getKeys()){
-
             int i = config.getInt("Rank." + rank);
             mapLimites.put(rank, i);
         }
@@ -52,6 +54,24 @@ public class ConfigConfig {
         priceHomes = config.getInt("Homes.Price");
         maxHomes = config.getInt("Homes.Max");
 
+        defaultSpawn = config.getString( "Spawn.Default");
+
+        System.out.println(config.getSection("Spawn").getKeys());
+
+        for (String spawn : config.getSection("Spawn").getKeys()) {
+            System.out.println(spawn);
+            if (!spawn.equalsIgnoreCase("Default")) {
+                String world = config.getString("Spawn." + spawn + ".World");
+                double x = config.getDouble("Spawn." + spawn + ".X");
+                double y = config.getDouble("Spawn." + spawn + ".Y");
+                double z = config.getDouble("Spawn." + spawn + ".Z");
+                float pitch = config.getFloat("Spawn." + spawn + ".Pitch");
+                float yaw = config.getFloat("Spawn." + spawn + ".Yaw");
+                SpawnObject spawnObject = new SpawnObject(spawn, world, x, y, z, pitch, yaw);
+                spawnMap.put(spawn, spawnObject);
+                System.out.println(spawn + "-" + world + "-" + x + "-" + y + "-" + z + "-" + pitch + "-" + yaw);
+            }
+        }
     }
 
     public String getDatabaseName() {
@@ -108,5 +128,13 @@ public class ConfigConfig {
 
     public int getMaxHomes() {
         return maxHomes;
+    }
+
+    public String getDefaultSpawn() {
+        return defaultSpawn;
+    }
+
+    public Map<String, SpawnObject> getSpawnMap() {
+        return spawnMap;
     }
 }

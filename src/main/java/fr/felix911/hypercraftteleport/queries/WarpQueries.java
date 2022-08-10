@@ -37,20 +37,20 @@ public class WarpQueries implements IDatabaseTable {
 
             while (result.next()) {
 
-                String name = result.getString(1);
-                String server = result.getString(2);
-                String wolrd = result.getString(3);
-                double x = result.getDouble(4);
-                double y = result.getDouble(5);
-                double z = result.getDouble(6);
-                float pitch = result.getFloat(7);
-                float yaw = result.getFloat(8);
-                String block = result.getString(9);
-                int cmd = result.getInt(10);
-                boolean b = result.getBoolean(11);
+                String name = result.getString(2);
+                String server = result.getString(3);
+                String world = result.getString(4);
+                double x = result.getDouble(5);
+                double y = result.getDouble(6);
+                double z = result.getDouble(7);
+                float pitch = result.getFloat(8);
+                float yaw = result.getFloat(9);
+                String block = result.getString(10);
+                int cmd = result.getInt(11);
+                boolean b = result.getBoolean(12);
 
 
-                WarpObject warpObject = new WarpObject(name,server,wolrd,x,y,z,pitch,yaw,block,cmd,b);
+                WarpObject warpObject = new WarpObject(name,server,world,x,y,z,pitch,yaw,block,cmd,b);
                 warpCache.put(name,warpObject);
             }
 
@@ -160,8 +160,7 @@ public class WarpQueries implements IDatabaseTable {
             statement = connection.prepareStatement(UPDATE_MATERIAL);
             statement.setString(1, material);
             statement.setInt(2, customModelData);
-
-            statement.setString(4, warp);
+            statement.setString(3, warp);
             statement.executeUpdate();
 
         } catch (SQLException throwables) {

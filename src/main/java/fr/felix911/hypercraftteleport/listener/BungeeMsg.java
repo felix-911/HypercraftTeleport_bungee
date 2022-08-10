@@ -4,11 +4,10 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import fr.felix911.apiproxy.ApiProxy;
 import fr.felix911.hypercraftteleport.HypercraftTeleport;
 import fr.felix911.hypercraftteleport.objects.HomeObject;
-import fr.felix911.hypercraftteleport.objects.LocationObject;
+import fr.felix911.hypercraftteleport.objects.SpawnObject;
 import fr.felix911.hypercraftteleport.objects.WarpObject;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -18,6 +17,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 import java.util.ArrayList;
@@ -44,10 +46,15 @@ public class BungeeMsg implements Listener {
             if (subChannel.equalsIgnoreCase("sethome")){
 
                 String jsonString = in.readUTF();
-                JsonObject json = (JsonObject) new JsonParser().parse(jsonString);
+                JSONObject json = null;
+                try {
+                    json = (JSONObject) new JSONParser().parse(jsonString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 UUID senderUUID = UUID.fromString(json.get("RequestedPlayerUUID").toString().replace("\"",""));
                 UUID playeruuid = UUID.fromString(json.get("PlayerHomeUUID").toString().replace("\"",""));
-                JsonObject jsonHome = (JsonObject) json.get("home");
+                JSONObject jsonHome = (JSONObject) json.get("Home");
                 String name = jsonHome.get("Name").toString().replace("\"","");
                 String server = jsonHome.get("Server").toString().replace("\"","");
                 String world = jsonHome.get("World").toString().replace("\"","");
@@ -139,18 +146,27 @@ public class BungeeMsg implements Listener {
 
             }
             if (subChannel.equalsIgnoreCase("setwarp")){
-                UUID senderUUID = UUID.fromString(in.readUTF());
-                String name = in.readUTF();
-                String server = in.readUTF();
-                String world = in.readUTF();
-                double x = in.readDouble();
-                double y = in.readDouble();
-                double z = in.readDouble();
-                float pitch = in.readFloat();
-                float yaw = in.readFloat();
-                String block = in.readUTF();
-                int customModelData = in.readInt();
-                boolean needPerm = in.readBoolean();
+
+                String jsonString = in.readUTF();
+                JSONObject json = null;
+                try {
+                    json = (JSONObject) new JSONParser().parse(jsonString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                UUID senderUUID = UUID.fromString(json.get("RequestedPlayerUUID").toString().replace("\"",""));
+                JSONObject jsonHome = (JSONObject) json.get("Warp");
+                String name = jsonHome.get("Name").toString().replace("\"","");
+                String server = jsonHome.get("Server").toString().replace("\"","");
+                String world = jsonHome.get("World").toString().replace("\"","");
+                double x = Double.parseDouble(jsonHome.get("X").toString().replace("\"",""));
+                double y = Double.parseDouble(jsonHome.get("Y").toString().replace("\"",""));
+                double z = Double.parseDouble(jsonHome.get("Z").toString().replace("\"",""));
+                float pitch = Float.parseFloat(jsonHome.get("Pitch").toString().replace("\"",""));
+                float yaw = Float.parseFloat(jsonHome.get("Yaw").toString().replace("\"",""));
+                String block = jsonHome.get("Block").toString().replace("\"","");
+                int customModelData = Integer.parseInt(jsonHome.get("CustomModelData").toString());
+                boolean needPerm = Boolean.parseBoolean(String.valueOf(json.get("NeedPerm")));
 
                 WarpObject warp = new WarpObject(name,server,world,x,y,z,pitch,yaw,block,customModelData,needPerm);
                 pl.getCreateWarp().createWarp(senderUUID, warp);
@@ -167,7 +183,7 @@ public class BungeeMsg implements Listener {
                 BaseComponent b;
                 Map<String, WarpObject> warpCache = pl.getWarpCache().getWarpCache();
                 WarpObject warp = warpCache.get(warpName);
-                if (warpCache.containsKey(warp)) {
+                if (warpCache.containsKey(warp.getName())) {
                     warp.setBlock(material);
                     warp.setCustomModelData(customModelData);
                     pl.getWarpQueries().editMaterial(warpName, material, customModelData);
@@ -178,7 +194,6 @@ public class BungeeMsg implements Listener {
                     String out = pl.getConfigurationManager().getLang().getWarpNoWarpFound();
                     out = out.replace("{warp}", warpName);
                     b = new TextComponent(out);
-
                 }
                 sender.sendMessage(b);
             }
@@ -192,18 +207,53 @@ public class BungeeMsg implements Listener {
                 String location = in.readUTF();
                 pl.getLocationQueries().deathLocation(player, location);
             }
-
             if (subChannel.equalsIgnoreCase("setspawn")){
-                UUID senderUUID = UUID.fromString(in.readUTF());
-                String server = in.readUTF();
-                String world = in.readUTF();
-                double x = in.readDouble();
-                double y = in.readDouble();
-                double z = in.readDouble();
-                float pitch = in.readFloat();
-                float yaw = in.readFloat();
-                LocationObject spawn = new LocationObject(server,world,x,y,z,pitch,yaw);
+                String jsonString = in.readUTF();
+                JSONObject json = null;
+                try {
+                    json = (JSONObject) new JSONParser().parse(jsonString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                UUID senderUUID = UUID.fromString(json.get("RequestedPlayerUUID").toString().replace("\"",""));
+                JSONObject jsonHome = (JSONObject) json.get("Spawn");
+                String server = jsonHome.get("Server").toString().replace("\"","");
+                String world = jsonHome.get("World").toString().replace("\"","");
+                double x = Double.parseDouble(jsonHome.get("X").toString().replace("\"",""));
+                double y = Double.parseDouble(jsonHome.get("Y").toString().replace("\"",""));
+                double z = Double.parseDouble(jsonHome.get("Z").toString().replace("\"",""));
+                float pitch = Float.parseFloat(jsonHome.get("Pitch").toString().replace("\"",""));
+                float yaw = Float.parseFloat(jsonHome.get("Yaw").toString().replace("\"",""));
+
+                SpawnObject spawn = new SpawnObject(server,world,x,y,z,pitch,yaw);
                 pl.getSpawnManager().setSpawn(senderUUID, spawn);
+
+            }
+            if (subChannel.equalsIgnoreCase("RequestTeleport")){
+                UUID sender = UUID.fromString(in.readUTF());
+                UUID player = UUID.fromString(in.readUTF());
+                String type = in.readUTF();
+                String name = in.readUTF();
+
+                ProxiedPlayer proxiedPlayer = pl.getProxy().getPlayer(sender);
+                if (type.equalsIgnoreCase("warp")){
+                    Map<String, WarpObject> warpMap = pl.getWarpCache().getWarpCache();
+                    if (warpMap.containsKey(name)){
+                        WarpObject warp = warpMap.get(name);
+                        ApiProxy.teleportPlayerToLocation(proxiedPlayer, warp.getServer(), warp.getWorld(), warp.getX(), warp.getY(), warp.getZ(), warp.getPitch(), warp.getYaw());
+                    }
+                } else if (type.equalsIgnoreCase("home")){
+                    Map<UUID, Map<String, HomeObject>> mapCache = pl.getHomeCache().getHomesCache();
+
+                    if (!mapCache.containsKey(player)){
+                        pl.getHomeCache().loadPlayer(player);
+                    }
+                    Map<String, HomeObject> homeMap = pl.getHomeCache().getHomesCache().get(player);
+                    if (homeMap.containsKey(name)){
+                        HomeObject home = homeMap.get(name);
+                        ApiProxy.teleportPlayerToLocation(proxiedPlayer, home.getServer(), home.getWorld(), home.getX(), home.getY(), home.getZ(), home.getPitch(), home.getPitch());
+                    }
+                }
 
             }
 

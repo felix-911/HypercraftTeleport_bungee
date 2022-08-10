@@ -38,6 +38,7 @@ public class CreateWarp {
                 s = pl.getConfigurationManager().getLang().getWarpCreate();
                 s = s.replace("{home}", warp.getName());
             }
+            pl.updateWarpBukkit(sender, pl.getWarpCache().getWarpCache());
 
             b = new TextComponent(s);
             sender.sendMessage(b);

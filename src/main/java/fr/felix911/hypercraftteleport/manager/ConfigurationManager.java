@@ -14,11 +14,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class ConfigurationManager {
-    private final ConfigConfig config = new ConfigConfig();
     private final HypercraftTeleport plugin;
 
-    private final LangConfig lang = new LangConfig();
     private Configuration langConfig;
+    private final LangConfig lang = new LangConfig();
+    private final ConfigConfig config = new ConfigConfig();
 
 
     public ConfigurationManager(HypercraftTeleport plugin) {
