@@ -90,12 +90,12 @@ public class Warp extends BaseCommand {
                 if (cache.containsKey(warp)){
 
                     WarpObject warpObject = cache.get(warp);
-                    etat = ApiProxy.teleportPlayerToLocation(sender,warpObject.getServer(),warpObject.getWorld(),warpObject.getX(),warpObject.getY(),warpObject.getZ(),warpObject.getPitch(),warpObject.getYaw());
-                    if (etat.equalsIgnoreCase("fail")) {
-                        etat = pl.getConfigurationManager().getLang().getFailTp();
-                    } else if(etat.equalsIgnoreCase("succes")){
+                    try {
+                        ApiProxy.teleportPlayerToLocation(sender,warpObject.getServer(),warpObject.getWorld(),warpObject.getX(),warpObject.getY(),warpObject.getZ(),warpObject.getPitch(),warpObject.getYaw());
                         etat = pl.getConfigurationManager().getLang().getHomeTeleport();
                         etat = etat.replace("{home}", warp);
+                    } catch (Exception e){
+                        etat = pl.getConfigurationManager().getLang().getFailTp();
                     }
                 } else {
                     etat = pl.getConfigurationManager().getLang().getWarpNoWarpFound();
@@ -103,8 +103,6 @@ public class Warp extends BaseCommand {
                 }
                 b = new TextComponent(etat);
                 sender.sendMessage(b);
-
-
             } else {
             b = new TextComponent(pl.getConfigurationManager().getLang().getNoConsole());
             commandSender.sendMessage(b);

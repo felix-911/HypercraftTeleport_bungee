@@ -56,10 +56,7 @@ public class ConfigConfig {
 
         defaultSpawn = config.getString( "Spawn.Default");
 
-        System.out.println(config.getSection("Spawn").getKeys());
-
         for (String spawn : config.getSection("Spawn").getKeys()) {
-            System.out.println(spawn);
             if (!spawn.equalsIgnoreCase("Default")) {
                 String world = config.getString("Spawn." + spawn + ".World");
                 double x = config.getDouble("Spawn." + spawn + ".X");
@@ -69,7 +66,6 @@ public class ConfigConfig {
                 float yaw = config.getFloat("Spawn." + spawn + ".Yaw");
                 SpawnObject spawnObject = new SpawnObject(spawn, world, x, y, z, pitch, yaw);
                 spawnMap.put(spawn, spawnObject);
-                System.out.println(spawn + "-" + world + "-" + x + "-" + y + "-" + z + "-" + pitch + "-" + yaw);
             }
         }
     }

@@ -29,37 +29,25 @@ public class Tp extends BaseCommand {
                     if (commandSender instanceof ProxiedPlayer){
                         ProxiedPlayer sender = (ProxiedPlayer) commandSender;
                         ProxiedPlayer target = pl.getProxy().getPlayer(player);
-                        UUID playeruuid = null;
+                        UUID targetUUID;
                         if (target == null) {
-                            playeruuid = ApiProxy.getPlayerUUID(player);
-
-                            if (playeruuid == null) {
+                            targetUUID = ApiProxy.getPlayerUUID(player);
+                            ApiProxy.teleportPlayerToPlayer(sender.getUniqueId(),targetUUID);
+                            if (targetUUID == null) {
                                 String nop = pl.getConfigurationManager().getLang().getPlayerNotFound();
                                 nop = nop.replace("{player}",player);
                                 b = new TextComponent(nop);
                                 commandSender.sendMessage(b);
                                 return;
                             }
+                        }else {
+                            ApiProxy.teleportPlayerToPlayer(sender.getUniqueId(),target.getUniqueId());
                         }
 
-                        ProxiedPlayer toMove;
-                        if (!sender.getName().equalsIgnoreCase(player)){
-                            toMove = target;
-                        } else {
-                            toMove = sender;
-                        }
-
-                            String etat;
-                        etat = ApiProxy.teleportPlayerToPlayer(sender.getUniqueId(),toMove.getUniqueId());
-
-                        if (etat.equalsIgnoreCase("fail")) {
-                                etat = pl.getConfigurationManager().getLang().getFailTp();
-                            } else if(etat.equalsIgnoreCase("succes")){
-                                etat = pl.getConfigurationManager().getLang().getToPlayer();
-                                etat = etat.replace("{player}", player);
-                            }
-                            b = new TextComponent(etat);
-                            sender.sendMessage(b);
+                        String etat = pl.getConfigurationManager().getLang().getToPlayer();
+                        etat = etat.replace("{player}", player);
+                        b = new TextComponent(etat);
+                        sender.sendMessage(b);
 
                     } else {
                         String nop = pl.getConfigurationManager().getLang().getNoConsole();
@@ -74,57 +62,31 @@ public class Tp extends BaseCommand {
     @CommandCompletion("@players @nothing")
     public void tphere(CommandSender commandSender, String player) {
         pl.getProxy().getScheduler().runAsync(pl, () -> {
-                    BaseComponent b;
+            BaseComponent b;
 
-                    if (commandSender instanceof ProxiedPlayer){
-                        ProxiedPlayer sender = (ProxiedPlayer) commandSender;
-                        ProxiedPlayer target = pl.getProxy().getPlayer(player);
-                        UUID playeruuid = null;
-                        if (target == null) {
-                            playeruuid = ApiProxy.getPlayerUUID(player);
+            if (commandSender instanceof ProxiedPlayer) {
+                ProxiedPlayer sender = (ProxiedPlayer) commandSender;
+                ProxiedPlayer target = pl.getProxy().getPlayer(player);
+                UUID playeruuid;
+                if (target == null) {
+                    playeruuid = ApiProxy.getPlayerUUID(player);
+                    ApiProxy.teleportPlayerToPlayer(playeruuid, sender.getUniqueId());
+                    if (playeruuid == null) {
+                        String nop = pl.getConfigurationManager().getLang().getPlayerNotFound();
+                        nop = nop.replace("{player}", player);
+                        b = new TextComponent(nop);
+                        commandSender.sendMessage(b);
+                        return;
+                    }
+                } else {
+                    ApiProxy.teleportPlayerToPlayer(target.getUniqueId(), sender.getUniqueId());
+                }
 
-                            if (playeruuid == null) {
-                                String nop = pl.getConfigurationManager().getLang().getPlayerNotFound();
-                                nop = nop.replace("{player}",player);
-                                b = new TextComponent(nop);
-                                commandSender.sendMessage(b);
-                                return;
-                            }
-                        }
-
-                        ProxiedPlayer toMove;
-                        if (!sender.getName().equalsIgnoreCase(player)){
-                            toMove = target;
-                        } else {
-                            toMove = sender;
-                        }
-
-                        String etat;
-                        if (target == null) {
-                            String location = pl.getLocationQueries().getLogoutLocation(playeruuid);
-
-                            String[] l = location.split("¤");
-                            String server = l[0];
-                            String world = l[1];
-                            double lx = Double.parseDouble(l[2]);
-                            double ly = Double.parseDouble(l[3]);
-                            double lz = Double.parseDouble(l[4]);
-                            float pitch = Float.parseFloat(l[5]);
-                            float yaw = Float.parseFloat(l[6]);
-
-                            etat = ApiProxy.teleportPlayerToLocation(toMove,server,world,lx,ly,lz,pitch,yaw);
-                        } else {
-                            etat = ApiProxy.teleportPlayerToPlayer(toMove.getUniqueId(),sender.getUniqueId());
-                        }
-
-                        if (etat.equalsIgnoreCase("fail")) {
-                            etat = pl.getConfigurationManager().getLang().getFailTp();
-                        } else if(etat.equalsIgnoreCase("succes")){
-                            etat = pl.getConfigurationManager().getLang().getToPlayer();
-                            etat = etat.replace("{player}", player);
-                        }
-                        b = new TextComponent(etat);
-                        sender.sendMessage(b);
+                String etat = "";
+                etat = pl.getConfigurationManager().getLang().getToPlayerHere();
+                etat = etat.replace("{player}", player);
+                b = new TextComponent(etat);
+                sender.sendMessage(b);
 
                     } else {
                         String nop = pl.getConfigurationManager().getLang().getNoConsole();

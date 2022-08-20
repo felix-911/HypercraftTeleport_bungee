@@ -3,6 +3,7 @@ package fr.felix911.hypercraftteleport.commands.home;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import fr.felix911.apiproxy.ApiProxy;
+import fr.felix911.apiproxy.objects.LocationObject;
 import fr.felix911.hypercraftteleport.HypercraftTeleport;
 import fr.felix911.hypercraftteleport.objects.HomeObject;
 import net.md_5.bungee.api.CommandSender;
@@ -42,12 +43,12 @@ public class Home extends BaseCommand {
                     } else {
                         if (playerHomes.containsKey(home)){
                             HomeObject homeObject = playerHomes.get(home);
-                            etat = ApiProxy.teleportPlayerToLocation(sender,homeObject.getServer(),homeObject.getWorld(),homeObject.getX(),homeObject.getY(),homeObject.getZ(),homeObject.getPitch(),homeObject.getYaw());
-                            if (etat.equalsIgnoreCase("fail")) {
-                                etat = pl.getConfigurationManager().getLang().getFailTp();
-                            } else if(etat.equalsIgnoreCase("succes")){
+                            try {
+                                ApiProxy.teleportPlayerToLocation(sender,homeObject.getServer(),homeObject.getWorld(),homeObject.getX(),homeObject.getY(),homeObject.getZ(),homeObject.getPitch(),homeObject.getYaw());
                                 etat = pl.getConfigurationManager().getLang().getHomeTeleport();
                                 etat = etat.replace("{home}", home);
+                            } catch (Exception e){
+                                etat = pl.getConfigurationManager().getLang().getFailTp();
                             }
                         } else {
                             etat = pl.getConfigurationManager().getLang().getHomeNoHomeFound();
@@ -95,12 +96,12 @@ public class Home extends BaseCommand {
                         } else {
                             if (playerHomes.containsKey(home)){
                                 HomeObject homeObject = playerHomes.get(home);
-                                etat = ApiProxy.teleportPlayerToLocation(sender,homeObject.getServer(),homeObject.getWorld(),homeObject.getX(),homeObject.getY(),homeObject.getZ(),homeObject.getPitch(),homeObject.getYaw());
-                                if (etat.equalsIgnoreCase("fail")) {
-                                    etat = pl.getConfigurationManager().getLang().getFailTp();
-                                } else if(etat.equalsIgnoreCase("succes")){
+                                try {
+                                    ApiProxy.teleportPlayerToLocation(sender,homeObject.getServer(),homeObject.getWorld(),homeObject.getX(),homeObject.getY(),homeObject.getZ(),homeObject.getPitch(),homeObject.getYaw());
                                     etat = pl.getConfigurationManager().getLang().getHomeTeleport();
                                     etat = etat.replace("{home}", home);
+                                } catch (Exception e){
+                                    etat = pl.getConfigurationManager().getLang().getFailTp();
                                 }
                             } else {
                                 etat = pl.getConfigurationManager().getLang().getHomeNoHomeFound();

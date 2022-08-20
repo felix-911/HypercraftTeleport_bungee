@@ -28,42 +28,28 @@ public class Homes extends BaseCommand {
 
     @Default
     @CommandPermission("hypercraftteleport.command.homes")
-    @CommandCompletion("@nothing @nothing")
-    public void homes(CommandSender commandSender) {
-        pl.getProxy().getScheduler().runAsync(pl, () -> {
-            BaseComponent b;
-
-            if (commandSender instanceof ProxiedPlayer) {
-
-                ProxiedPlayer sender = (ProxiedPlayer) commandSender;
-                listHomes(sender, sender.getName(), "self");
-
-            } else {
-                b = new TextComponent(pl.getConfigurationManager().getLang().getNoConsole());
-                commandSender.sendMessage(b);
-            }
-        });
-    }
-
-    @CommandPermission("hypercraftteleport.command.homes.other")
     @CommandCompletion("@players @nothing")
-    public void homes(CommandSender commandSender, String player) {
+    public void homes(CommandSender commandSender, @Optional String player) {
         pl.getProxy().getScheduler().runAsync(pl, () -> {
             BaseComponent b;
 
             if (commandSender instanceof ProxiedPlayer) {
+                if (player == null){
+                    ProxiedPlayer sender = (ProxiedPlayer) commandSender;
+                    listHomes(sender, sender.getName(), "self");
+                } else if(commandSender.hasPermission("hypercraftteleport.command.homes.other")) {
+                    ProxiedPlayer sender = (ProxiedPlayer) commandSender;
 
-                ProxiedPlayer sender = (ProxiedPlayer) commandSender;
+                    List<String> splitServer = pl.getConfigurationManager().getConfig().getSplitServer();
 
-                List<String> splitServer = pl.getConfigurationManager().getConfig().getSplitServer();
-
-                if (sender.hasPermission("hypercrafthomes.command.home.homes.other")) {
-                    listHomes(sender, player, "other");
-                } else if (sender.hasPermission("hypercrafthomes.command.home.homes.anim") && splitServer.contains(sender.getServer().getInfo().getName())){
-                    listHomes(sender, player, "anim");
-                } else {
-                    b = new TextComponent(pl.getConfigurationManager().getLang().getNoPerm());
-                    sender.sendMessage(b);
+                    if (sender.hasPermission("hypercrafthomes.command.home.homes.other")) {
+                        listHomes(sender, player, "other");
+                    } else if (sender.hasPermission("hypercrafthomes.command.home.homes.anim") && splitServer.contains(sender.getServer().getInfo().getName())){
+                        listHomes(sender, player, "anim");
+                    } else {
+                        b = new TextComponent(pl.getConfigurationManager().getLang().getNoPerm());
+                        sender.sendMessage(b);
+                    }
                 }
 
             } else {
@@ -72,6 +58,7 @@ public class Homes extends BaseCommand {
             }
         });
     }
+
 
     private void listHomes(ProxiedPlayer sender, String player, String type){
         BaseComponent b;

@@ -38,8 +38,6 @@ public class Tpa extends BaseCommand {
             ProxiedPlayer player1 = pl.getProxy().getPlayer(player);
 
             if (player1 != null){
-                System.out.println(player1.getUniqueId());
-
                 try {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
@@ -51,7 +49,6 @@ public class Tpa extends BaseCommand {
                 } catch (Exception e) {
                     pl.getLogger().info(ChatColor.RED + "error envoi sur : " + ChatColor.GOLD + "tpaDemand");
                 }
-                System.out.println(player1.getServer().getInfo().getName().toLowerCase(Locale.ROOT));
                 if (player1.getServer().getInfo().getName().toLowerCase(Locale.ROOT).contains("pvp")){
                     String pvp = pl.getConfigurationManager().getLang().getWarningPvp();
                     b = new TextComponent(pvp);
